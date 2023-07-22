@@ -17,12 +17,16 @@ class autoRenewLetsEncrypt:
 
     def start(self):
         try:
-            self.renewLetsEncrypt()
-            self.makeSitePem()
-            self.changeEncryptDirName()
-            self.modifyProxyConfig()
+            if self.renewLetsEncrypt():
+                return True
+            if self.makeSitePem():
+                return True
+            if self.changeEncryptDirName():
+                return True
+            if self.modifyProxyConfig():
+                return True
 
-            return True
+            return False
         except():
             return False
 
