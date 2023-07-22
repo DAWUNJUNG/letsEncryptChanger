@@ -11,7 +11,7 @@ class autoRenewLetsEncrypt():
         self.encryptArchivePath = os.getenv('ENCRYPT_PATH') + '/archive/' + os.getenv('DOMAIN')
         self.encryptRenewPath = os.getenv('ENCRYPT_PATH') + '/renew/' + os.getenv('DOMAIN') + '.conf'
         self.domain = os.getenv('DOMAIN')
-        self.haproxyPath = os.getenv('HAPROXY_PATH')
+        self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
         self.todayDate = date.today()
 
     def start(self):
