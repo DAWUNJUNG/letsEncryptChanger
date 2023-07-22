@@ -33,8 +33,12 @@ class autoRenewLetsEncrypt:
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
 
+            if str(os.system(command)).find("Error creating new order"):
+                return False
             if str(os.system(command)).find("Successfully received certificate."):
                 return True
+
+            return False
         except():
             return False
 
