@@ -50,8 +50,9 @@ class autoRenewLetsEncrypt:
     def makeSitePem(self):
         try:
             # site.pem 파일 생성
-            os.system(
-                f"cat {self.encryptLivePath}/cert.pem {self.encryptLivePath}/chain.pem {self.encryptLivePath}/privkey.pem > {self.encryptLivePath}/site.pem")
+            if os.popen(f"cat {self.encryptLivePath}/cert.pem {self.encryptLivePath}/chain.pem {self.encryptLivePath}/privkey.pem > {self.encryptLivePath}/site.pem").read() != '':
+                return False
+
             return True
         except():
             return False
@@ -63,10 +64,13 @@ class autoRenewLetsEncrypt:
         # ========================================================================================
         try:
             # live, archive 디렉토리명 변경
-            os.system(f"mv {self.encryptLivePath}/ {self.encryptLivePath}-{self.todayDate}")
-            os.system(f"mv {self.encryptArchivePath}/ {self.encryptArchivePath}-{self.todayDate}")
+            if os.popen(f"mv {self.encryptLivePath}/ {self.encryptLivePath}-{self.todayDate}").read() != '':
+                return False
+            if os.popen(f"mv {self.encryptArchivePath}/ {self.encryptArchivePath}-{self.todayDate}").read() != '':
+                return False
             # renew 파일명 변경
-            os.system(f"mv {self.encryptRenewPath}/ {self.encryptRenewPath}-{self.todayDate}")
+            if os.popen(f"mv {self.encryptRenewPath}/ {self.encryptRenewPath}-{self.todayDate}").read() != '':
+                return False
 
             return True
         except():
@@ -87,7 +91,8 @@ class autoRenewLetsEncrypt:
                 file.write(proxy_cfg)
                 file.close()
 
-            os.system('systemctl restart haproxy')
+            if os.popen('systemctl restart haproxy').read() != '':
+                return False
 
             return True
         except():
