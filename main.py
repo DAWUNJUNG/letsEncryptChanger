@@ -36,10 +36,11 @@ class autoRenewLetsEncrypt:
             command = "certbot certonly --dns-cloudflare --preferred-challenges dns-01 " \
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
+            command_result = os.system(command)
 
-            if str(os.system(command)).find("Error creating new order"):
+            if command_result.find("Error creating new order"):
                 return False
-            if str(os.system(command)).find("Successfully received certificate."):
+            if command_result.find("Successfully received certificate."):
                 return True
 
             return False
