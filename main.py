@@ -76,7 +76,6 @@ class autoRenewLetsEncrypt:
                 proxy_cfg = proxy_cfg.replace(f"{self.domain}-2023-07-21", f"{self.domain}-{self.todayDate}")
                 re.sub(f"/{self.domain}-^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
                        f"{self.domain}-{self.todayDate}", proxy_cfg)
-                print(proxy_cfg)
                 file.close()
 
             with open(f"{self.haproxyPath}", 'wt') as file:
