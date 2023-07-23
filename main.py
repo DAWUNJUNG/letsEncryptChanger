@@ -135,15 +135,16 @@ class autoRenewLetsEncrypt:
         smtp.starttls()  # TLS 사용시 필요
         smtp.login(os.environ.get('GOOGLE_ID'), os.environ.get('GOOGLE_APP_PW'))
 
-        msg = MIMEText(self.log_message)
+        msg = MIMEText(self.log)
         msg['To'] = os.environ.get('DESTINATION_EMAIL')
         msg['From'] = os.environ.get('SOURCE_EMAIL')
-        msg['Subject'] = '근태 자동화 도구 동작 결과 안내 (' + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ')'
+        msg['Subject'] = f"{self.domain} 인증서 교체 자동화 ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
         smtp.sendmail(os.environ.get('SOURCE_EMAIL'), os.environ.get('DESTINATION_EMAIL'), msg.as_string())
 
 
 if __name__ == '__main__':
     renewClass = autoRenewLetsEncrypt()
+    renewClass.mail_send()
     if renewClass.start():
         print('성공')
     else:
