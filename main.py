@@ -1,3 +1,5 @@
+import subprocess
+
 import dotenv
 import os
 import re
@@ -48,7 +50,7 @@ class autoRenewLetsEncrypt:
             command = "certbot certonly --dns-cloudflare --preferred-challenges dns-01 " \
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
-            command_result = os.popen(command).readline()
+            command_result = subprocess.check_output(command)
 
             self.log(command_result + '\n')
 
