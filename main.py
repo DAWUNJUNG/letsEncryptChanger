@@ -48,7 +48,7 @@ class autoRenewLetsEncrypt:
             command = "certbot certonly --dns-cloudflare --preferred-challenges dns-01 " \
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
-            command_result = os.popen(command).readlines()
+            command_result = os.popen(command).readline()
 
             self.log(command_result + '\n')
 
