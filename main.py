@@ -153,9 +153,8 @@ class autoRenewLetsEncrypt:
 
 if __name__ == '__main__':
     renewClass = autoRenewLetsEncrypt()
-    renewClass.start()
     renewClass.mail_send()
-    # if renewClass.start():
-    #     print('성공')
-    # else:
-    #     print('실패')
+    if renewClass.start():
+        print('성공')
+    else:
+        print('실패')
