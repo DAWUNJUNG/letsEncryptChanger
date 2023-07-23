@@ -133,18 +133,16 @@ class autoRenewLetsEncrypt:
 
     # 메일 발송 function
     def mail_send(self):
-        print(self.log_message)
+        smtp = smtplib.SMTP('smtp.gmail.com', 587)
+        smtp.ehlo()
+        smtp.starttls()  # TLS 사용시 필요
+        smtp.login(os.getenv('GOOGLE_ID'), os.getenv('GOOGLE_APP_PW'))
 
-        # smtp = smtplib.SMTP('smtp.gmail.com', 587)
-        # smtp.ehlo()
-        # smtp.starttls()  # TLS 사용시 필요
-        # smtp.login(os.getenv('GOOGLE_ID'), os.getenv('GOOGLE_APP_PW'))
-        #
-        # msg = MIMEText(self.log_message)
-        # msg['To'] = os.getenv('DESTINATION_EMAIL')
-        # msg['From'] = os.getenv('SOURCE_EMAIL')
-        # msg['Subject'] = f"{self.domain} 인증서 교체 자동화 ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
-        # smtp.sendmail(os.getenv('SOURCE_EMAIL'), os.getenv('DESTINATION_EMAIL'), msg.as_string())
+        msg = MIMEText(self.log_message)
+        msg['To'] = os.getenv('DESTINATION_EMAIL')
+        msg['From'] = os.getenv('SOURCE_EMAIL')
+        msg['Subject'] = f"{self.domain} 인증서 교체 자동화 ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
+        smtp.sendmail(os.getenv('SOURCE_EMAIL'), os.getenv('DESTINATION_EMAIL'), msg.as_string())
 
     # 로그 작성 function
     def log(self, message):
