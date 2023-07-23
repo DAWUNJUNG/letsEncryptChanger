@@ -52,7 +52,7 @@ class autoRenewLetsEncrypt:
 
             self.log(command_result + '\n')
 
-            return False
+            return True
         except():
             return False
 
