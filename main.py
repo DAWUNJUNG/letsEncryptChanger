@@ -38,6 +38,8 @@ class autoRenewLetsEncrypt:
                       f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
             command_result = os.popen(command).read()
 
+            print(command_result)
+
             if command_result.find("Error creating new order"):
                 return False
             if command_result.find("Successfully received certificate."):
