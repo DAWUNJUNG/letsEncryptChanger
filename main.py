@@ -169,6 +169,8 @@ class autoRenewLetsEncrypt:
         with open(f"{self.haproxyPath}", 'wt') as file:
             file.write(self.original_proxy_data)
             file.close()
+        haproxyRestartResult = os.popen('systemctl restart haproxy').read()
+        self.log(haproxyRestartResult + '\n')
 
         self.log('======= Rollback End =======\n')
 
