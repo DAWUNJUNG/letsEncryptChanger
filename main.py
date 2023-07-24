@@ -78,17 +78,17 @@ class autoRenewLetsEncrypt:
         # ========================================================================================
         try:
             # live, archive 디렉토리명 변경
-            changeDirLive = os.popen(f"mv {self.encryptLivePath}/ {self.encryptLivePath}-{self.todayDate}").read()
+            changeDirLive = os.popen(f"mv {self.encryptLivePath} {self.encryptLivePath}-{self.todayDate}").read()
             self.log(changeDirLive + '\n')
             if changeDirLive != '':
                 return False
             changeDirArchive = os.popen(
-                f"mv {self.encryptArchivePath}/ {self.encryptArchivePath}-{self.todayDate}").read()
+                f"mv {self.encryptArchivePath} {self.encryptArchivePath}-{self.todayDate}").read()
             self.log(changeDirArchive + '\n')
             if changeDirArchive != '':
                 return False
             # renew 파일명 변경
-            changeDirRenew = os.popen(f"mv {self.encryptRenewPath}/ {self.encryptRenewPath}-{self.todayDate}").read()
+            changeDirRenew = os.popen(f"mv {self.encryptRenewPath} {self.encryptRenewPath}-{self.todayDate}").read()
             self.log(changeDirRenew + '\n')
             if changeDirRenew != '':
                 return False
