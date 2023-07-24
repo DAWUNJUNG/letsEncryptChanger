@@ -16,6 +16,7 @@ class autoRenewLetsEncrypt:
         self.domain = os.getenv('DOMAIN')
         self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
         self.todayDate = date.today()
+        self.original_proxy_data = ''
         self.log_message = ''
 
     def start(self):
@@ -103,6 +104,7 @@ class autoRenewLetsEncrypt:
 
             with open(f"{self.haproxyPath}", 'rt') as file:
                 proxy_cfg = file.read()
+                self.original_proxy_data = proxy_cfg
                 self.log("==== Before Proxy File ====" + '\n')
                 self.log(proxy_cfg + '\n')
                 proxy_cfg = proxy_cfg.replace(f"{self.domain}-2023-07-21", f"{self.domain}-{self.todayDate}")
@@ -143,6 +145,32 @@ class autoRenewLetsEncrypt:
     def log(self, message):
         self.log_message = self.log_message + message
 
+    def rollback(self):
+        self.log('======= Rollback Start =======\n')
+
+        # live, archive 디렉토리명 변경
+        changeDirLive1 = os.popen(f"rm -rf {self.encryptLivePath}").read()
+        changeDirLive2 = os.popen(f"rm -rf {self.encryptLivePath}-{self.todayDate}").read()
+        self.log(changeDirLive1 + '\n')
+        self.log(changeDirLive2 + '\n')
+
+        changeDirArchive1 = os.popen(f"rm -rf {self.encryptArchivePath}").read()
+        changeDirArchive2 = os.popen(f"rm -rf {self.encryptArchivePath}-{self.todayDate}").read()
+        self.log(changeDirArchive1 + '\n')
+        self.log(changeDirArchive2 + '\n')
+
+        # renew 파일 삭제
+        changeDirRenew1 = os.popen(f"rm -rf {self.encryptRenewPath}").read()
+        changeDirRenew2 = os.popen(f"rm -rf {self.encryptRenewPath}-{self.todayDate}").read()
+        self.log(changeDirRenew1 + '\n')
+        self.log(changeDirRenew2 + '\n')
+
+        #proxy data rollback
+        with open(f"{self.haproxyPath}", 'wt') as file:
+            file.write(self.original_proxy_data)
+            file.close()
+
+        self.log('======= Rollback End =======\n')
 
 if __name__ == '__main__':
     renewClass = autoRenewLetsEncrypt()
@@ -150,6 +178,7 @@ if __name__ == '__main__':
     if renewClass.start():
         print('성공')
     else:
+        renewClass.rollback()
         print('실패')
 
     renewClass.mail_send()
