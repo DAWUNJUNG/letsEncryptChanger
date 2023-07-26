@@ -12,7 +12,7 @@ class autoRenewLetsEncrypt:
         dotenv.load_dotenv(dotenv.find_dotenv())
         self.encryptLivePath = os.getenv('ENCRYPT_PATH') + '/live/' + os.getenv('DOMAIN')
         self.encryptArchivePath = os.getenv('ENCRYPT_PATH') + '/archive/' + os.getenv('DOMAIN')
-        self.encryptRenewPath = os.getenv('ENCRYPT_PATH') + '/renew/' + os.getenv('DOMAIN') + '.conf'
+        self.encryptRenewalPath = os.getenv('ENCRYPT_PATH') + '/renewal/' + os.getenv('DOMAIN') + '.conf'
         self.domain = os.getenv('DOMAIN')
         self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
         self.todayDate = date.today()
@@ -88,10 +88,10 @@ class autoRenewLetsEncrypt:
             self.log(changeDirArchive + '\n')
             if changeDirArchive != '':
                 return False
-            # renew 파일명 변경
-            changeDirRenew = os.popen(f"mv {self.encryptRenewPath} {self.encryptRenewPath}-{self.todayDate}").read()
-            self.log(changeDirRenew + '\n')
-            if changeDirRenew != '':
+            # renewal 파일명 변경
+            changeDirRenewal = os.popen(f"mv {self.encryptRenewalPath} {self.encryptRenewalPath}-{self.todayDate}").read()
+            self.log(changeDirRenewal + '\n')
+            if changeDirRenewal != '':
                 return False
 
             return True
@@ -159,11 +159,11 @@ class autoRenewLetsEncrypt:
         self.log(changeDirArchive1 + '\n')
         self.log(changeDirArchive2 + '\n')
 
-        # renew 파일 삭제
-        changeDirRenew1 = os.popen(f"rm -rf {self.encryptRenewPath}").read()
-        changeDirRenew2 = os.popen(f"rm -rf {self.encryptRenewPath}-{self.todayDate}").read()
-        self.log(changeDirRenew1 + '\n')
-        self.log(changeDirRenew2 + '\n')
+        # renewal 파일 삭제
+        changeDirRenewal1 = os.popen(f"rm -rf {self.encryptRenewalPath}").read()
+        changeDirRenewal2 = os.popen(f"rm -rf {self.encryptRenewalPath}-{self.todayDate}").read()
+        self.log(changeDirRenewal1 + '\n')
+        self.log(changeDirRenewal2 + '\n')
 
         #proxy data rollback
         with open(f"{self.haproxyPath}", 'wt') as file:
