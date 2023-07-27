@@ -102,13 +102,13 @@ class autoRenewLetsEncrypt:
         try:
             proxyCfg = ''
 
-            with open(f"{self.haproxyPath}", 'w+t') as file:
+            with open(f"{self.haproxyPath}", 'w+') as file:
                 # 기존 Proxy 파일 읽기
                 proxyCfg = file.read()
 
                 # 기존 Proxy 백업 파일 생성
                 self.log("==== Backup Before Proxy File Create ====" + '\n')
-                beforeHaProxy = open(f"{self.haproxyDir}/beforeHaproxyBackup.conf", 'w+')
+                beforeHaProxy = open(f"{self.haproxyDir}/beforeHaproxyBackup.cfg", 'w+')
                 beforeHaProxy.write(proxyCfg)
                 beforeHaProxy.close()
 
@@ -119,7 +119,7 @@ class autoRenewLetsEncrypt:
                 
                 # 변경된 Proxy 백업 파일 생성
                 self.log("==== Backup After Proxy File Create ====" + '\n')
-                afterHaProxy = open(f"{self.haproxyDir}/afterHaproxyBackup.conf", 'w+')
+                afterHaProxy = open(f"{self.haproxyDir}/afterHaproxyBackup.cfg", 'w+')
                 afterHaProxy.write(proxyCfg)
                 afterHaProxy.close()
 
