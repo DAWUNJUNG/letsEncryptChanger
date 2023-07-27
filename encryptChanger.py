@@ -176,7 +176,7 @@ class autoRenewLetsEncrypt:
         self.log(changeDirRenewal2 + '\n')
 
         #proxy data rollback
-        rollbackFromBeforeBackup = os.popen(f"cp {self.haproxyDir}/beforeHaproxyBackup.conf {self.haproxyPath}").read()
+        rollbackFromBeforeBackup = os.popen(f"cp {self.haproxyDir}/beforeHaproxyBackup.cfg {self.haproxyPath}").read()
         self.log(rollbackFromBeforeBackup + '\n')
         haproxyRestartResult = os.popen('systemctl restart haproxy').read()
         self.log(haproxyRestartResult + '\n')
