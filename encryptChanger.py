@@ -14,10 +14,10 @@ class autoRenewLetsEncrypt:
         self.encryptArchivePath = os.getenv('ENCRYPT_PATH') + '/archive/' + os.getenv('DOMAIN')
         self.encryptRenewalPath = os.getenv('ENCRYPT_PATH') + '/renewal/' + os.getenv('DOMAIN') + '.conf'
         self.domain = os.getenv('DOMAIN')
+        self.haproxyDir = os.getenv('HAPROXY_PATH')
         self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
         self.todayDate = date.today()
-        self.original_proxy_data = ''
-        self.log_message = ''
+        self.logMessage = ''
 
     def start(self):
         renewLetsEncryptResult = False
@@ -49,9 +49,9 @@ class autoRenewLetsEncrypt:
             command = "certbot certonly --dns-cloudflare --preferred-challenges dns-01 " \
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
-            command_result = os.popen(command).read()
+            commandResult = os.popen(command).read()
 
-            self.log(command_result + '\n')
+            self.log(commandResult + '\n')
 
             return True
         except():
@@ -100,22 +100,31 @@ class autoRenewLetsEncrypt:
 
     def modifyProxyConfig(self):
         try:
-            proxy_cfg = ''
+            proxyCfg = ''
 
-            with open(f"{self.haproxyPath}", 'rt') as file:
-                proxy_cfg = file.read()
-                self.original_proxy_data = proxy_cfg
-                self.log("==== Before Proxy File ====" + '\n')
-                self.log(proxy_cfg + '\n')
-                proxy_cfg = proxy_cfg.replace(f"{self.domain}-2023-07-21", f"{self.domain}-{self.todayDate}")
+            with open(f"{self.haproxyPath}", 'w+t') as file:
+                # 기존 Proxy 파일 읽기
+                proxyCfg = file.read()
+
+                # 기존 Proxy 백업 파일 생성
+                self.log("==== Backup Before Proxy File Create ====" + '\n')
+                beforeHaProxy = open(f"{self.haproxyDir}/beforeHaproxyBackup.conf", 'w+')
+                beforeHaProxy.write(proxyCfg)
+                beforeHaProxy.close()
+
+                # SSL 인증서 갱신 후 Dir 변경
+                proxyCfg = proxyCfg.replace(f"{self.domain}-2023-07-21", f"{self.domain}-{self.todayDate}")
                 re.sub(f"/{self.domain}-^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-                       f"{self.domain}-{self.todayDate}", proxy_cfg)
-                self.log("==== After Proxy File ====" + '\n')
-                self.log(proxy_cfg + '\n')
-                file.close()
+                       f"{self.domain}-{self.todayDate}", proxyCfg)
+                
+                # 변경된 Proxy 백업 파일 생성
+                self.log("==== Backup After Proxy File Create ====" + '\n')
+                afterHaProxy = open(f"{self.haproxyDir}/afterHaproxyBackup.conf", 'w+')
+                afterHaProxy.write(proxyCfg)
+                afterHaProxy.close()
 
-            with open(f"{self.haproxyPath}", 'wt') as file:
-                file.write(proxy_cfg)
+                # 변경된 내용 Proxy 파일에 적용
+                file.write(proxyCfg)
                 file.close()
 
             self.log("==== Proxy Restart ====" + '\n')
@@ -129,13 +138,13 @@ class autoRenewLetsEncrypt:
             return False
 
     # 메일 발송 function
-    def mail_send(self):
+    def mailSend(self):
         smtp = smtplib.SMTP('smtp.gmail.com', 587)
         smtp.ehlo()
         smtp.starttls()  # TLS 사용시 필요
         smtp.login(os.getenv('GOOGLE_ID'), os.getenv('GOOGLE_APP_PW'))
 
-        msg = MIMEText(self.log_message)
+        msg = MIMEText(self.logMessage)
         msg['To'] = os.getenv('DESTINATION_EMAIL')
         msg['From'] = os.getenv('SOURCE_EMAIL')
         msg['Subject'] = f"{self.domain} 인증서 교체 자동화 ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
@@ -143,7 +152,7 @@ class autoRenewLetsEncrypt:
 
     # 로그 작성 function
     def log(self, message):
-        self.log_message = self.log_message + message
+        self.logMessage = self.logMessage + message
 
     def rollback(self):
         self.log('======= Rollback Start =======\n')
@@ -166,9 +175,8 @@ class autoRenewLetsEncrypt:
         self.log(changeDirRenewal2 + '\n')
 
         #proxy data rollback
-        with open(f"{self.haproxyPath}", 'wt') as file:
-            file.write(self.original_proxy_data)
-            file.close()
+        rollbackFromBeforeBackup = os.popen(f"cp {self.haproxyDir}/beforeHaproxyBackup.conf {self.haproxyPath}").read()
+        self.log(rollbackFromBeforeBackup + '\n')
         haproxyRestartResult = os.popen('systemctl restart haproxy').read()
         self.log(haproxyRestartResult + '\n')
 
@@ -183,4 +191,4 @@ if __name__ == '__main__':
         renewClass.rollback()
         print('실패')
 
-    renewClass.mail_send()
+    renewClass.mailSend()
