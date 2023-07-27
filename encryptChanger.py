@@ -107,9 +107,6 @@ class autoRenewLetsEncrypt:
                 proxyCfg = file.read()
 
             with open(f"{self.haproxyPath}", 'w+t') as file:
-
-                print(proxyCfg)
-
                 # 기존 Proxy 백업 파일 생성
                 self.log("==== Backup Before Proxy File Create ====" + '\n')
                 beforeHaProxy = open(f"{self.haproxyDir}/beforeHaproxyBackup.cfg", 'w+t')
