@@ -19,7 +19,6 @@ class autoRenewLetsEncrypt:
         self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
         self.todayDate = date.today()
         self.logMessage = ''
-        self.cloudflareSecretPath = os.getenv('CLOUDFLARE_SECRET_PATH')
 
     def start(self):
         renewLetsEncryptResult = False
@@ -50,7 +49,7 @@ class autoRenewLetsEncrypt:
             # Let's Encrypt 인증서 재발급
             command = "certbot certonly --dns-cloudflare --preferred-challenges dns-01 " \
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
-                      f"{self.cloudflareSecretPath} -d {self.domain} -d *.{self.domain}"
+                      f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
 
             with subprocess.Popen([command], stdout=subprocess.PIPE) as proc:
                 proc.wait()
