@@ -52,9 +52,8 @@ class autoRenewLetsEncrypt:
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"{self.cloudflareSecretPath} -d {self.domain} -d *.{self.domain}"
 
-            with subprocess.Popen([command], stdout=subprocess.PIPE) as proc:
-                proc.wait()
-                commandResult = proc.stdout.read().decode("utf-8")
+            with subprocess.Popen([command], stdout=subprocess.PIPE, shell=True) as proc:
+                commandResult = proc.stdout.readline().decode("utf-8")
 
             self.log(commandResult + '\n')
 
