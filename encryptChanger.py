@@ -1,5 +1,6 @@
 import dotenv
 import os
+import subprocess
 import re
 from datetime import date, datetime
 import smtplib
@@ -49,7 +50,10 @@ class autoRenewLetsEncrypt:
             command = "certbot certonly --dns-cloudflare --preferred-challenges dns-01 " \
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"/root/.secrets/certbot-cloudflare.ini -d {self.domain} -d *.{self.domain}"
-            commandResult = os.popen(command).read()
+
+            with subprocess.Popen([command], stdout=subprocess.PIPE) as proc:
+                proc.wait()
+                commandResult = proc.stdout.read().decode("utf-8")
 
             self.log(commandResult + '\n')
 
