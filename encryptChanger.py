@@ -47,17 +47,16 @@ class autoRenewLetsEncrypt:
 
     def renewLetsEncrypt(self):
         try:
-            commandResult = ''
-
             # Let's Encrypt 인증서 재발급
             command = "certbot certonly --dns-cloudflare --preferred-challenges dns-01 " \
                       "--dns-cloudflare-propagation-seconds 20 --dns-cloudflare-credentials " \
                       f"{self.cloudflareSecretPath} -d {self.domain} -d *.{self.domain}"
 
-            with subprocess.Popen([command], stdout=subprocess.PIPE, shell=True) as proc:
-                commandResult = commandResult + proc.stdout.readline().decode("utf-8")
+            proc = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+            out, err = proc.communicate()
+            proc.terminate()
 
-            self.log(commandResult + '\n')
+            self.log(out)
 
             return True
         except():
