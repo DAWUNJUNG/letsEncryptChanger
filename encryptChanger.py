@@ -56,7 +56,8 @@ class autoRenewLetsEncrypt:
             out, err = proc.communicate()
             proc.terminate()
 
-            self.log(out)
+            self.log(str(out))
+            self.log(str(err))
 
             return True
         except():
