@@ -95,7 +95,8 @@ class autoRenewLetsEncrypt:
             if changeDirArchive != '':
                 return False
             # renewal 파일명 변경
-            changeDirRenewal = os.popen(f"mv {self.encryptRenewalPath} {self.encryptRenewalPath}-{self.todayDate}").read()
+            renewalPathSplit = self.encryptRenewalPath.split('.')
+            changeDirRenewal = os.popen(f"mv {self.encryptRenewalPath} {renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}").read()
             self.log(changeDirRenewal + '\n')
             if changeDirRenewal != '':
                 return False
@@ -120,7 +121,6 @@ class autoRenewLetsEncrypt:
                 beforeHaProxy.close()
 
                 # SSL 인증서 갱신 후 Dir 변경
-                proxyCfg = proxyCfg.replace(f"{self.domain}-2023-07-21", f"{self.domain}-{self.todayDate}")
                 re.sub(f"/{self.domain}-^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
                        f"{self.domain}-{self.todayDate}", proxyCfg)
                 
