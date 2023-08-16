@@ -95,7 +95,7 @@ class autoRenewLetsEncrypt:
             if changeDirArchive != '':
                 return False
             # renewal 파일명 변경
-            renewalPathSplit = self.encryptRenewalPath.split('.')
+            renewalPathSplit = self.encryptRenewalPath.rsplit('.', 2)
             changeDirRenewal = os.popen(f"mv {self.encryptRenewalPath} {renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}").read()
             self.log(changeDirRenewal + '\n')
             if changeDirRenewal != '':
