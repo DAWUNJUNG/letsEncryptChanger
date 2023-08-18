@@ -28,25 +28,25 @@ class autoRenewLetsEncrypt:
 
         self.log("============ Start Renew Let's Encrypt ============\n")
         renewLetsEncryptResult = self.renewLetsEncrypt()
-        self.log(renewLetsEncryptResult)
+        self.log(renewLetsEncryptResult if '성공' else '실패')
         self.log("============ End Renew Let's Encrypt ============\n")
 
         if renewLetsEncryptResult:
             self.log("============ Start Make Site Pem ============\n")
             makeSitePemResult = self.makeSitePem()
-            self.log(makeSitePemResult)
+            self.log(makeSitePemResult if '성공' else '실패')
             self.log("============ End Make Site Pem ============\n")
 
         if makeSitePemResult:
             self.log("============ Start Change Encrypt Dir Name ============\n")
             changeEncryptDirNameResult = self.changeEncryptDirName()
-            self.log(changeEncryptDirNameResult)
+            self.log(changeEncryptDirNameResult if '성공' else '실패')
             self.log("============ End Change Encrypt Dir Name ============\n")
 
         if changeEncryptDirNameResult:
             self.log("============ Start Modify Proxy Config ============\n")
             modifyProxyConfigResult = self.modifyProxyConfig()
-            self.log(modifyProxyConfigResult)
+            self.log(modifyProxyConfigResult if '성공' else '실패')
             self.log("============ End Modify Proxy Config ============\n")
 
     def renewLetsEncrypt(self):
