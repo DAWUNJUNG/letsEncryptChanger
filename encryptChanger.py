@@ -28,21 +28,25 @@ class autoRenewLetsEncrypt:
 
         self.log("============ Start Renew Let's Encrypt ============\n")
         renewLetsEncryptResult = self.renewLetsEncrypt()
+        self.log(renewLetsEncryptResult)
         self.log("============ End Renew Let's Encrypt ============\n")
 
         if renewLetsEncryptResult:
             self.log("============ Start Make Site Pem ============\n")
             makeSitePemResult = self.makeSitePem()
+            self.log(makeSitePemResult)
             self.log("============ End Make Site Pem ============\n")
 
         if makeSitePemResult:
             self.log("============ Start Change Encrypt Dir Name ============\n")
             changeEncryptDirNameResult = self.changeEncryptDirName()
+            self.log(changeEncryptDirNameResult)
             self.log("============ End Change Encrypt Dir Name ============\n")
 
         if changeEncryptDirNameResult:
             self.log("============ Start Modify Proxy Config ============\n")
-            self.modifyProxyConfig()
+            modifyProxyConfigResult = self.modifyProxyConfig()
+            self.log(modifyProxyConfigResult)
             self.log("============ End Modify Proxy Config ============\n")
 
     def renewLetsEncrypt(self):
@@ -56,8 +60,13 @@ class autoRenewLetsEncrypt:
             out, err = proc.communicate()
             proc.terminate()
 
-            self.log(str(out))
-            self.log(str(err))
+            self.log('output : ' + str(out))
+            self.log('\n')
+            self.log('error : ' + str(err))
+            self.log('\n')
+
+            if 'Successfully received certificate' not in str(out):
+                return False
 
             return True
         except():
@@ -121,7 +130,7 @@ class autoRenewLetsEncrypt:
                 beforeHaProxy.close()
 
                 # SSL 인증서 갱신 후 Dir 변경
-                re.sub(f"/{self.domain}-^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
+                re.sub(f"/{self.domain}-\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
                        f"{self.domain}-{self.todayDate}", proxyCfg)
                 
                 # 변경된 Proxy 백업 파일 생성
