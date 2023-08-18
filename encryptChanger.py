@@ -60,9 +60,11 @@ class autoRenewLetsEncrypt:
             out, err = proc.communicate()
             proc.terminate()
 
-            self.log('output : ' + str(out))
+            self.log('output : \n')
+            self.log(str(out))
             self.log('\n')
-            self.log('error : ' + str(err))
+            self.log('error : \n')
+            self.log(str(err))
             self.log('\n')
 
             if 'Successfully received certificate' not in str(out):
