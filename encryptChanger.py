@@ -207,7 +207,7 @@ if __name__ == '__main__':
     if renewClass.start():
         print('성공')
     else:
-        # renewClass.rollback()
+        renewClass.rollback()
         print('실패')
 
     renewClass.mailSend()
