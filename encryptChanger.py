@@ -133,8 +133,7 @@ class autoRenewLetsEncrypt:
                 beforeHaProxy.close()
 
                 # SSL 인증서 갱신 후 Dir 변경
-                proxyCfg = re.sub("(" + self.domain + "-\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]))",
-                       self.domain + "-" + self.todayDate, proxyCfg)
+                proxyCfg = re.sub("(" + self.domain + "-\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]))", self.domain + "-" + str(self.todayDate), proxyCfg)
                 
                 # 변경된 Proxy 백업 파일 생성
                 self.log("==== Backup After Proxy File Create ====" + '\n')
