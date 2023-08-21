@@ -187,8 +187,9 @@ class autoRenewLetsEncrypt:
         self.log(changeDirArchive2 + '\n')
 
         # renewal 파일 삭제
+        renewalPathSplit = self.encryptRenewalPath.rsplit('.', 1)
         changeDirRenewal1 = os.popen(f"rm -rf {self.encryptRenewalPath}").read()
-        changeDirRenewal2 = os.popen(f"rm -rf {self.encryptRenewalPath}-{self.todayDate}").read()
+        changeDirRenewal2 = os.popen(f"rm -rf {renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}").read()
         self.log(changeDirRenewal1 + '\n')
         self.log(changeDirRenewal2 + '\n')
 
