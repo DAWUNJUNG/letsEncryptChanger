@@ -190,15 +190,15 @@ class autoRenewLetsEncrypt:
         renewalPathSplit = self.encryptRenewalPath.rsplit('.', 1)
         changeDirRenewal1 = os.popen(f"rm -rf {self.encryptRenewalPath}").read()
         changeDirRenewal2 = os.popen(f"rm -rf {renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}").read()
-        print(f"{renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}")
         self.log(changeDirRenewal1 + '\n')
         self.log(changeDirRenewal2 + '\n')
 
         #proxy data rollback
-        rollbackFromBeforeBackup = os.popen(f"cp {self.haproxyDir}/beforeHaproxyBackup.cfg {self.haproxyPath}").read()
-        self.log(rollbackFromBeforeBackup + '\n')
-        haproxyRestartResult = os.popen('systemctl restart haproxy').read()
-        self.log(haproxyRestartResult + '\n')
+        if os.path.isfile("{self.haproxyDir}/beforeHaproxyBackup.cfg"):
+            rollbackFromBeforeBackup = os.popen(f"cp {self.haproxyDir}/beforeHaproxyBackup.cfg {self.haproxyPath}").read()
+            self.log(rollbackFromBeforeBackup + '\n')
+            haproxyRestartResult = os.popen('systemctl restart haproxy').read()
+            self.log(haproxyRestartResult + '\n')
 
         self.log('======= Rollback End =======\n')
 
