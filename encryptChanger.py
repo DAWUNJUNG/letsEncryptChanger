@@ -25,30 +25,36 @@ class autoRenewLetsEncrypt:
         renewLetsEncryptResult = False
         makeSitePemResult = False
         changeEncryptDirNameResult = False
+        modifyProxyConfigResult = False
 
         self.log("============ Start Renew Let's Encrypt ============\n")
         renewLetsEncryptResult = self.renewLetsEncrypt()
-        self.log('성공' if renewLetsEncryptResult else '실패')
+        self.log('\n성공\n' if renewLetsEncryptResult else '\n실패\n')
         self.log("============ End Renew Let's Encrypt ============\n")
 
         if renewLetsEncryptResult:
             self.log("============ Start Make Site Pem ============\n")
             makeSitePemResult = self.makeSitePem()
 
-            self.log('성공' if makeSitePemResult else '실패')
+            self.log('\n성공\n' if makeSitePemResult else '\n실패\n')
             self.log("============ End Make Site Pem ============\n")
 
         if makeSitePemResult:
             self.log("============ Start Change Encrypt Dir Name ============\n")
             changeEncryptDirNameResult = self.changeEncryptDirName()
-            self.log('성공' if changeEncryptDirNameResult else '실패')
+            self.log('\n성공\n' if changeEncryptDirNameResult else '\n실패\n')
             self.log("============ End Change Encrypt Dir Name ============\n")
 
         if changeEncryptDirNameResult:
             self.log("============ Start Modify Proxy Config ============\n")
             modifyProxyConfigResult = self.modifyProxyConfig()
-            self.log('성공' if modifyProxyConfigResult else '실패')
+            self.log('\n성공\n' if modifyProxyConfigResult else '\n실패\n')
             self.log("============ End Modify Proxy Config ============\n")
+
+        if renewLetsEncryptResult and makeSitePemResult and changeEncryptDirNameResult and modifyProxyConfigResult:
+            return True
+        else:
+            return False
 
     def renewLetsEncrypt(self):
         try:
