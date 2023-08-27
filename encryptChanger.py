@@ -11,12 +11,12 @@ class autoRenewLetsEncrypt:
 
     def __init__(self):
         dotenv.load_dotenv(dotenv.find_dotenv())
-        self.encryptLiveDir = os.getenv('ENCRYPT_PATH')
-        self.encryptLivePath = self.encryptLiveDir + '/live/' + os.getenv('DOMAIN')
-        self.encryptArchiveDir = os.getenv('ENCRYPT_PATH')
-        self.encryptArchivePath = self.encryptArchiveDir + '/archive/' + os.getenv('DOMAIN')
-        self.encryptRenewalDir = os.getenv('ENCRYPT_PATH')
-        self.encryptRenewalPath = self.encryptRenewalDir + '/renewal/' + os.getenv('DOMAIN') + '.conf'
+        self.encryptLiveDir = os.getenv('ENCRYPT_PATH') + '/live/'
+        self.encryptLivePath = self.encryptLiveDir + os.getenv('DOMAIN')
+        self.encryptArchiveDir = os.getenv('ENCRYPT_PATH') + '/archive/'
+        self.encryptArchivePath = self.encryptArchiveDir + os.getenv('DOMAIN')
+        self.encryptRenewalDir = os.getenv('ENCRYPT_PATH') + '/renewal/'
+        self.encryptRenewalPath = self.encryptRenewalDir + os.getenv('DOMAIN') + '.conf'
         self.domain = os.getenv('DOMAIN')
         self.haproxyDir = os.getenv('HAPROXY_PATH')
         self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
