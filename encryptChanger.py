@@ -11,9 +11,12 @@ class autoRenewLetsEncrypt:
 
     def __init__(self):
         dotenv.load_dotenv(dotenv.find_dotenv())
-        self.encryptLivePath = os.getenv('ENCRYPT_PATH') + '/live/' + os.getenv('DOMAIN')
-        self.encryptArchivePath = os.getenv('ENCRYPT_PATH') + '/archive/' + os.getenv('DOMAIN')
-        self.encryptRenewalPath = os.getenv('ENCRYPT_PATH') + '/renewal/' + os.getenv('DOMAIN') + '.conf'
+        self.encryptLiveDir = os.getenv('ENCRYPT_PATH')
+        self.encryptLivePath = self.encryptLiveDir + '/live/' + os.getenv('DOMAIN')
+        self.encryptArchiveDir = os.getenv('ENCRYPT_PATH')
+        self.encryptArchivePath = self.encryptArchiveDir + '/archive/' + os.getenv('DOMAIN')
+        self.encryptRenewalDir = os.getenv('ENCRYPT_PATH')
+        self.encryptRenewalPath = self.encryptRenewalDir + '/renewal/' + os.getenv('DOMAIN') + '.conf'
         self.domain = os.getenv('DOMAIN')
         self.haproxyDir = os.getenv('HAPROXY_PATH')
         self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
@@ -123,6 +126,20 @@ class autoRenewLetsEncrypt:
         except():
             return False
 
+    def delOldProxyFiles(self):
+        try:
+            liveFileList = os.listdir(self.encryptLiveDir)
+            archiveFileList = os.listdir(self.encryptArchiveDir)
+            renewalFileList = os.listdir(self.encryptRenewalDir)
+
+            print(liveFileList)
+            print(archiveFileList)
+            print(renewalFileList)
+
+            return True
+        except():
+            return False
+
     def modifyProxyConfig(self):
         try:
             proxyCfg = ''
@@ -211,10 +228,12 @@ class autoRenewLetsEncrypt:
 if __name__ == '__main__':
     renewClass = autoRenewLetsEncrypt()
 
-    if renewClass.start():
-        print('성공')
-    else:
-        renewClass.rollback()
-        print('실패')
+    renewClass.delOldProxyFiles()
 
-    renewClass.mailSend()
+    # if renewClass.start():
+    #     print('성공')
+    # else:
+    #     renewClass.rollback()
+    #     print('실패')
+    #
+    # renewClass.mailSend()
