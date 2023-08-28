@@ -143,10 +143,13 @@ class autoRenewLetsEncrypt:
             renewalPathSplit = self.encryptRenewalPath.rsplit('.', 1)
 
             # 변경일 디렉토리 삭제 대상에서 제외
+            print(self.encryptLivePath + '-' + self.todayDate in liveFileList)
             if self.encryptLivePath + '-' + self.todayDate in liveFileList:
                 liveFileList.remove(f"{self.encryptLivePath}-{self.todayDate}")
+            print(self.encryptArchivePath + '-' + self.todayDate in archiveFileList)
             if self.encryptArchivePath + '-' + self.todayDate in archiveFileList:
                 archiveFileList.remove(f"{self.encryptArchivePath}-{self.todayDate}")
+            print(renewalPathSplit[0] + '-' + self.todayDate + '.' + renewalPathSplit[1] in archiveFileList)
             if renewalPathSplit[0] + '-' + self.todayDate + '.' + renewalPathSplit[1] in archiveFileList:
                 renewalFileList.remove(f"{renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}")
 
@@ -173,6 +176,8 @@ class autoRenewLetsEncrypt:
                 print(str(dirName))
                 changeDirRenewal2 = os.popen(f"rm -rf {str(dirName)}").read()
                 self.log(changeDirRenewal2 + '\n')
+
+            self.log('======= Delete Old Proxy Files End =======\n')
 
             return True
         except():
