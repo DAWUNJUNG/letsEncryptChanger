@@ -50,7 +50,7 @@ class autoRenewLetsEncrypt:
             self.log("============ End Change Encrypt Dir Name ============\n")
 
         if changeEncryptDirNameResult:
-            self.log("============ Start Modify Proxy Config ============\n")
+            self.log("============ Start Delete Old Proxy Files Config ============\n")
             delOldEncryptDirResult = self.delOldProxyFiles()
             self.log('\n성공\n' if delOldEncryptDirResult else '\n실패\n')
             self.log("============ End Modify Proxy Config ============\n")
@@ -154,20 +154,23 @@ class autoRenewLetsEncrypt:
             changeDirLive1 = os.popen(f"rm -rf {self.encryptLivePath}").read()
             self.log(changeDirLive1 + '\n')
             for dirName in liveFileList:
+                print(str(dirName))
                 changeDirLive2 = os.popen(f"rm -rf {str(dirName)}").read()
                 self.log(changeDirLive2 + '\n')
 
             # archive 디렉토리 작업
             changeDirArchive1 = os.popen(f"rm -rf {self.encryptArchivePath}").read()
             self.log(changeDirArchive1 + '\n')
-            for dirName in liveFileList:
+            for dirName in archiveFileList:
+                print(str(dirName))
                 changeDirArchive2 = os.popen(f"rm -rf {str(dirName)}").read()
                 self.log(changeDirArchive2 + '\n')
 
             # renewal 디렉토리 작업
             changeDirRenewal1 = os.popen(f"rm -rf {self.encryptRenewalPath}").read()
             self.log(changeDirRenewal1 + '\n')
-            for dirName in liveFileList:
+            for dirName in renewalFileList:
+                print(str(dirName))
                 changeDirRenewal2 = os.popen(f"rm -rf {str(dirName)}").read()
                 self.log(changeDirRenewal2 + '\n')
 
@@ -263,10 +266,12 @@ class autoRenewLetsEncrypt:
 if __name__ == '__main__':
     renewClass = autoRenewLetsEncrypt()
 
-    if renewClass.start():
-        print('성공')
-    else:
-        renewClass.rollback()
-        print('실패')
+    renewClass.delOldProxyFiles()
 
-    renewClass.mailSend()
+    # if renewClass.start():
+    #     print('성공')
+    # else:
+    #     renewClass.rollback()
+    #     print('실패')
+    #
+    # renewClass.mailSend()
