@@ -28,6 +28,7 @@ class autoRenewLetsEncrypt:
         renewLetsEncryptResult = False
         makeSitePemResult = False
         changeEncryptDirNameResult = False
+        delOldEncryptDirResult = False
         modifyProxyConfigResult = False
 
         self.log("============ Start Renew Let's Encrypt ============\n")
@@ -50,11 +51,17 @@ class autoRenewLetsEncrypt:
 
         if changeEncryptDirNameResult:
             self.log("============ Start Modify Proxy Config ============\n")
+            delOldEncryptDirResult = self.delOldProxyFiles()
+            self.log('\n성공\n' if delOldEncryptDirResult else '\n실패\n')
+            self.log("============ End Modify Proxy Config ============\n")
+
+        if delOldEncryptDirResult:
+            self.log("============ Start Modify Proxy Config ============\n")
             modifyProxyConfigResult = self.modifyProxyConfig()
             self.log('\n성공\n' if modifyProxyConfigResult else '\n실패\n')
             self.log("============ End Modify Proxy Config ============\n")
 
-        if renewLetsEncryptResult and makeSitePemResult and changeEncryptDirNameResult and modifyProxyConfigResult:
+        if renewLetsEncryptResult and makeSitePemResult and changeEncryptDirNameResult and delOldEncryptDirResult and modifyProxyConfigResult:
             return True
         else:
             return False
