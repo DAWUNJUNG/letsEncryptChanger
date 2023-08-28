@@ -148,7 +148,7 @@ class autoRenewLetsEncrypt:
                 liveFileList.remove(f"{self.domain}-{self.todayDate}")
             if f"{self.domain}-{self.todayDate}" in archiveFileList:
                 archiveFileList.remove(f"{self.domain}-{self.todayDate}")
-            if f"{self.domain}-{self.todayDate}.{renewalPathSplit[1]}" in archiveFileList:
+            if f"{self.domain}-{self.todayDate}.{renewalPathSplit[1]}" in renewalFileList:
                 renewalFileList.remove(f"{self.domain}-{self.todayDate}.{renewalPathSplit[1]}")
 
             # live 디렉토리 작업
@@ -266,12 +266,10 @@ class autoRenewLetsEncrypt:
 if __name__ == '__main__':
     renewClass = autoRenewLetsEncrypt()
 
-    renewClass.delOldProxyFiles()
+    if renewClass.start():
+        print('성공')
+    else:
+        renewClass.rollback()
+        print('실패')
 
-    # if renewClass.start():
-    #     print('성공')
-    # else:
-    #     renewClass.rollback()
-    #     print('실패')
-    #
-    # renewClass.mailSend()
+    renewClass.mailSend()
