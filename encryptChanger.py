@@ -128,13 +128,41 @@ class autoRenewLetsEncrypt:
 
     def delOldProxyFiles(self):
         try:
+            self.log('======= Delete Old Proxy Files Start =======\n')
+
             liveFileList = os.listdir(self.encryptLiveDir)
             archiveFileList = os.listdir(self.encryptArchiveDir)
             renewalFileList = os.listdir(self.encryptRenewalDir)
+            renewalPathSplit = self.encryptRenewalPath.rsplit('.', 1)
 
-            print(liveFileList)
-            print(archiveFileList)
-            print(renewalFileList)
+            # 변경일 디렉토리 삭제 대상에서 제외
+            liveFileList.remove(f"{self.encryptLivePath}-{self.todayDate}")
+            archiveFileList.remove(f"{self.encryptArchivePath}-{self.todayDate}")
+            renewalFileList.remove(f"{renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}")
+
+            # live 디렉토리 작업
+            changeDirLive1 = os.popen(f"rm -rf {self.encryptLivePath}").read()
+            self.log(changeDirLive1 + '\n')
+            for dirName in liveFileList:
+                # changeDirLive2 = os.popen(f"rm -rf {str(dirName)}").read()
+                # self.log(changeDirLive2 + '\n')
+                print(str(dirName))
+
+            # archive 디렉토리 작업
+            changeDirArchive1 = os.popen(f"rm -rf {self.encryptArchivePath}").read()
+            self.log(changeDirArchive1 + '\n')
+            for dirName in liveFileList:
+                # changeDirArchive2 = os.popen(f"rm -rf {str(dirName)}").read()
+                # self.log(changeDirArchive2 + '\n')
+                print(str(dirName))
+
+            # renewal 디렉토리 작업
+            changeDirRenewal1 = os.popen(f"rm -rf {self.encryptRenewalPath}").read()
+            self.log(changeDirRenewal1 + '\n')
+            for dirName in liveFileList:
+                # changeDirRenewal2 = os.popen(f"rm -rf {str(dirName)}").read()
+                # self.log(changeDirRenewal2 + '\n')
+                print(str(dirName))
 
             return True
         except():
