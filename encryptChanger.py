@@ -147,25 +147,22 @@ class autoRenewLetsEncrypt:
             changeDirLive1 = os.popen(f"rm -rf {self.encryptLivePath}").read()
             self.log(changeDirLive1 + '\n')
             for dirName in liveFileList:
-                # changeDirLive2 = os.popen(f"rm -rf {str(dirName)}").read()
-                # self.log(changeDirLive2 + '\n')
-                print(str(dirName))
+                changeDirLive2 = os.popen(f"rm -rf {str(dirName)}").read()
+                self.log(changeDirLive2 + '\n')
 
             # archive 디렉토리 작업
             changeDirArchive1 = os.popen(f"rm -rf {self.encryptArchivePath}").read()
             self.log(changeDirArchive1 + '\n')
             for dirName in liveFileList:
-                # changeDirArchive2 = os.popen(f"rm -rf {str(dirName)}").read()
-                # self.log(changeDirArchive2 + '\n')
-                print(str(dirName))
+                changeDirArchive2 = os.popen(f"rm -rf {str(dirName)}").read()
+                self.log(changeDirArchive2 + '\n')
 
             # renewal 디렉토리 작업
             changeDirRenewal1 = os.popen(f"rm -rf {self.encryptRenewalPath}").read()
             self.log(changeDirRenewal1 + '\n')
             for dirName in liveFileList:
-                # changeDirRenewal2 = os.popen(f"rm -rf {str(dirName)}").read()
-                # self.log(changeDirRenewal2 + '\n')
-                print(str(dirName))
+                changeDirRenewal2 = os.popen(f"rm -rf {str(dirName)}").read()
+                self.log(changeDirRenewal2 + '\n')
 
             return True
         except():
@@ -259,12 +256,10 @@ class autoRenewLetsEncrypt:
 if __name__ == '__main__':
     renewClass = autoRenewLetsEncrypt()
 
-    renewClass.delOldProxyFiles()
+    if renewClass.start():
+        print('성공')
+    else:
+        renewClass.rollback()
+        print('실패')
 
-    # if renewClass.start():
-    #     print('성공')
-    # else:
-    #     renewClass.rollback()
-    #     print('실패')
-    #
-    # renewClass.mailSend()
+    renewClass.mailSend()
