@@ -20,7 +20,7 @@ class autoRenewLetsEncrypt:
         self.domain = os.getenv('DOMAIN')
         self.haproxyDir = os.getenv('HAPROXY_PATH')
         self.haproxyPath = os.getenv('HAPROXY_PATH') + '/haproxy.cfg'
-        self.todayDate = date.today()
+        self.todayDate = str(date.today())
         self.logMessage = ''
         self.cloudflareSecretPath = os.getenv('CLOUDFLARE_SECRET_PATH')
 
