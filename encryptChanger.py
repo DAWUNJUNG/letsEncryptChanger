@@ -143,7 +143,10 @@ class autoRenewLetsEncrypt:
             renewalPathSplit = self.encryptRenewalPath.rsplit('.', 1)
 
             # 변경일 디렉토리 삭제 대상에서 제외
+            print(liveFileList)
+            print(self.encryptLivePath + '-' + self.todayDate)
             print(self.encryptLivePath + '-' + self.todayDate in liveFileList)
+            liveFileList.remove("README")
             if self.encryptLivePath + '-' + self.todayDate in liveFileList:
                 liveFileList.remove(f"{self.encryptLivePath}-{self.todayDate}")
             print(self.encryptArchivePath + '-' + self.todayDate in archiveFileList)
