@@ -136,9 +136,12 @@ class autoRenewLetsEncrypt:
             renewalPathSplit = self.encryptRenewalPath.rsplit('.', 1)
 
             # 변경일 디렉토리 삭제 대상에서 제외
-            liveFileList.remove(f"{self.encryptLivePath}-{self.todayDate}")
-            archiveFileList.remove(f"{self.encryptArchivePath}-{self.todayDate}")
-            renewalFileList.remove(f"{renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}")
+            if f"{self.encryptLivePath}-{self.todayDate}" in liveFileList:
+                liveFileList.remove(f"{self.encryptLivePath}-{self.todayDate}")
+            if f"{self.encryptArchivePath}-{self.todayDate}" in archiveFileList:
+                archiveFileList.remove(f"{self.encryptArchivePath}-{self.todayDate}")
+            if f"{renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}" in archiveFileList:
+                renewalFileList.remove(f"{renewalPathSplit[0]}-{self.todayDate}.{renewalPathSplit[1]}")
 
             # live 디렉토리 작업
             changeDirLive1 = os.popen(f"rm -rf {self.encryptLivePath}").read()
